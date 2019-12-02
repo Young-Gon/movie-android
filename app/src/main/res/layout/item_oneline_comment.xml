@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		tools:showIn="@layout/activity_comment_list">
+<data class="OneLineCommentItemBinding">
+	<variable
+			name="comment"
+			type="com.gondev.movie.model.database.entity.Comment" />
+	<variable
+			name="vm"
+			type="com.gondev.movie.ui.detail.IClickRecommend" />
+</data>
+	<androidx.constraintlayout.widget.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@android:color/white">
+
+		<de.hdodenhof.circleimageview.CircleImageView
+				android:id="@+id/profile_image"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="16dp"
+				android:layout_marginTop="16dp"
+				app:placeholder="@{@drawable/user1}"
+				app:src="@{comment.writer_image}"
+				tools:src="@drawable/user1"
+				app:civ_border_color="#FFD1D2D3"
+				app:civ_border_width="2dp"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"/>
+
+		<TextView
+				android:id="@+id/txtUserID"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="16dp"
+				android:layout_marginTop="8dp"
+				tools:text="kym71**"
+				android:text="@{comment.writer}"
+				android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+				android:textSize="12sp"
+				app:layout_constraintStart_toEndOf="@+id/profile_image"
+				app:layout_constraintTop_toTopOf="parent"/>
+
+		<TextView
+				android:id="@+id/txtCreateAt"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="4dp"
+				tools:text="10분전"
+				android:text="@{comment.time}"
+				android:textSize="12sp"
+				app:layout_constraintStart_toStartOf="@+id/txtUserID"
+				app:layout_constraintTop_toBottomOf="@+id/txtUserID"/>
+
+		<RatingBar
+				android:id="@+id/ratingbar"
+				style="?android:attr/ratingBarStyleSmall"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="16dp"
+				android:numStars="5"
+				android:progressTint="#FF81CBC4"
+				tools:rating="4.5"
+				android:rating="@{comment.rating}"
+				app:layout_constraintBottom_toBottomOf="@+id/txtCreateAt"
+				app:layout_constraintStart_toEndOf="@+id/txtCreateAt"
+				app:layout_constraintTop_toTopOf="@+id/txtCreateAt"/>
+
+		<TextView
+				android:id="@+id/txtComment"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="8dp"
+				android:layout_marginTop="8dp"
+				tools:text="적당히 재밌다. 오랜만에 잠안오는 영화 봤네요"
+				android:text="@{comment.contents}"
+				android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="@+id/txtCreateAt"
+				app:layout_constraintTop_toBottomOf="@+id/txtCreateAt"/>
+
+		<TextView
+				android:id="@+id/txtRecommend"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="8dp"
+				android:paddingBottom="8dp"
+				android:paddingLeft="16dp"
+				android:clickable="true"
+				android:focusable="true"
+				android:text="@{@string/comment_info(comment.recommend)}"
+				android:textColor="#444444"
+				app:layout_constraintStart_toEndOf="@+id/profile_image"
+				app:layout_constraintTop_toBottomOf="@+id/txtComment"
+				android:onClick="@{()->vm.onClickRecommend(comment)}"
+				tools:text="추천 0  |" />
+
+		<TextView
+				android:id="@+id/txtReport"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				app:layout_constraintBottom_toBottomOf="@+id/txtRecommend"
+				app:layout_constraintStart_toEndOf="@+id/txtRecommend"
+				app:layout_constraintTop_toTopOf="@+id/txtRecommend"
+				tools:text="  신고하기" />
+
+		<FrameLayout
+				android:layout_width="match_parent"
+				android:layout_height="2dp"
+				android:background="@color/main_background"
+				app:layout_constraintTop_toBottomOf="@+id/txtRecommend" />
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

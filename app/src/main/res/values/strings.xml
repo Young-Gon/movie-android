@@ -1,0 +1,12 @@
+<resources>
+	<string name="app_name">movie</string>
+	<string name="comma">%,d</string>
+	<string name="float_one">%.1f</string>
+	<string name="float_two">"%.1f (%,d명 참여)"</string>
+	<string name="reservation_grade">%d위 %.1f%%</string>
+	<string name="movie_info">%s 개봉\n%s / %d 분\n</string>
+	<string name="error_network">네트워크 오류 입니다.</string>
+	<string name="empty_item">아이템이 없습니다.</string>
+	<string name="movie_description">예매율 %.1f%% | %s세 관람가 | %s 개봉</string>
+	<string name="comment_info">추천 %,d |</string>
+</resources>

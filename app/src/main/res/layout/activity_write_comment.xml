@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		tools:context=".ui.write.WriteCommentActivity">
+	<data class="WriteCommentActivityBinding">
+		<import type="android.view.View"/>
+
+		<variable
+				name="vm"
+				type="com.gondev.movie.ui.write.WriteCommentViewModel" />
+	</data>
+	<androidx.constraintlayout.widget.ConstraintLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<TextView
+				android:id="@+id/txtTitle"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="16dp"
+				android:layout_marginTop="16dp"
+				tools:text="군도"
+				android:text="@{vm.movie.title}"
+				android:textSize="18sp"
+				android:textStyle="bold"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"/>
+
+		<ImageView
+				android:id="@+id/imgGrade"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="8dp"
+				app:layout_constraintBottom_toBottomOf="@+id/txtTitle"
+				app:layout_constraintStart_toEndOf="@+id/txtTitle"
+				app:layout_constraintTop_toTopOf="@+id/txtTitle"
+				android:src="@{vm.grade}"
+				tools:srcCompat="@drawable/ic_15"/>
+
+		<LinearLayout
+				android:id="@+id/linearLayout2"
+				android:layout_width="0dp"
+				android:layout_height="1dp"
+				android:layout_marginEnd="8dp"
+				android:layout_marginStart="8dp"
+				android:layout_marginTop="16dp"
+				android:background="#e5e5e5"
+				android:orientation="horizontal"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/txtTitle">
+		</LinearLayout>
+
+		<RatingBar
+				android:id="@+id/ratingBar"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="8dp"
+				android:layout_marginStart="8dp"
+				android:layout_marginTop="16dp"
+				android:rating="@={vm.rating}"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/linearLayout2"/>
+
+		<TextView
+				android:id="@+id/textView2"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="8dp"
+				android:layout_marginStart="8dp"
+				android:layout_marginTop="8dp"
+				android:text="평점을 입력해 주세요"
+				android:textSize="18sp"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/ratingBar"/>
+
+		<EditText
+				android:id="@+id/editTextComment"
+				android:layout_width="0dp"
+				android:layout_height="180dp"
+				android:layout_marginEnd="16dp"
+				android:layout_marginStart="16dp"
+				android:layout_marginTop="8dp"
+				android:background="@drawable/drawable_edittext_background"
+				android:ems="10"
+				android:hint="100자 이내로 작성해 주세요"
+				android:text="@={vm.textComment}"
+				android:inputType="none"
+				android:maxLength="100"
+				android:padding="8dp"
+				android:gravity="start|top"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/textView2"/>
+
+		<Button
+				android:id="@+id/buttonCancel"
+				style="?android:attr/borderlessButtonStyle"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="16dp"
+				android:layout_marginTop="16dp"
+				android:textColor="@drawable/drawable_text_show_all"
+				android:background="@drawable/drawable_background_show_all"
+				android:text="취소"
+				android:textSize="18sp"
+				android:onClick="@{()->vm.onClickButtonCancel()}"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/editTextComment"/>
+
+		<Button
+				android:id="@+id/buttonSave"
+				style="?android:attr/borderlessButtonStyle"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="8dp"
+				android:textColor="@drawable/drawable_text_show_all"
+				android:background="@drawable/drawable_background_show_all"
+				android:enabled="@{vm.textComment.length() > 0}"
+				android:visibility="@{vm.readyToSave? View.VISIBLE : View.INVISIBLE }"
+				tools:enabled="false"
+				android:text="저장"
+				android:textSize="18sp"
+				android:onClick="@{()->vm.onClickButtonSave()}"
+				app:layout_constraintEnd_toStartOf="@+id/buttonCancel"
+				app:layout_constraintTop_toTopOf="@+id/buttonCancel"/>
+
+		<ProgressBar
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				app:layout_constraintBottom_toBottomOf="@+id/buttonSave"
+				app:layout_constraintEnd_toEndOf="@+id/buttonSave"
+				app:layout_constraintStart_toStartOf="@+id/buttonSave"
+				app:layout_constraintTop_toTopOf="@+id/buttonSave"
+				app:visibleGone="@{!vm.readyToSave}"/>
+	</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

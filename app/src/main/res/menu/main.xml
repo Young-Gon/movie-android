@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto">
+	<item
+			android:id="@+id/action_sorting"
+			android:title="정렬"
+			app:showAsAction="always">
+		<menu>
+			<group>
+				<item
+						android:id="@+id/menu_reservation"
+						android:title="예매순" />
+				<item
+						android:id="@+id/menu_curation"
+						android:title="큐레이션순"/>
+				<item
+						android:id="@+id/menu_schedule"
+						android:title="상영일순"/>
+			</group>
+		</menu>
+	</item>
+</menu>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:showIn="@layout/activity_movie_detail">
+    <data class="HorizontalGalleryItemBinding">
+        <variable
+                name="photo"
+                type="com.gondev.movie.model.network.dto.Photo" />
+
+        <variable
+                name="vm"
+                type="com.gondev.movie.ui.detail.MovieDetailViewModel" />
+    </data>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/black"
+    android:layout_marginEnd="12dp">
+
+    <ImageView
+            android:id="@+id/imgThumbNail"
+            android:layout_width="120dp"
+            android:layout_height="80dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="@{()->vm.onClickPhoto(photo)}"
+            app:src="@{photo.url}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgVideoIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgThumbNail"
+        app:layout_constraintStart_toStartOf="@+id/imgThumbNail"
+            app:visibleGone="@{photo.video}"
+        app:srcCompat="@drawable/ic_play_32"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

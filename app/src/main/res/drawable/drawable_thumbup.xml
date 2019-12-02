@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SelectorGenerator v0.1.1 Copyright (C) 2012 The fatbird team
+      Develope by Delpini
+      E-mail : fatbird.delpini+sg@gmail.com
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+	<!-- Selected -->
+	<item android:state_selected="true"
+		android:drawable="@drawable/ic_thumb_up_selected" />
+	<!-- Normal -->
+	<item android:state_window_focused="false"
+		android:state_enabled="true"
+		android:drawable="@drawable/ic_thumb_up" />
+	<item android:state_enabled="true"
+		android:drawable="@drawable/ic_thumb_up" />
+	<!-- Default -->
+	<item android:drawable="@drawable/ic_thumb_up" />
+</selector>

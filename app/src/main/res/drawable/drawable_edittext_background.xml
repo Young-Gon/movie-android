@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SelectorGenerator v0.1.1 Copyright (C) 2012 The fatbird team
+      Develope by Delpini
+      E-mail : fatbird.delpini+sg@gmail.com
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item android:state_focused="true"
+		  android:drawable="@drawable/shape_roundrect_orange" />
+	<item android:state_enabled="true"
+		  android:state_focused="true"
+		  android:drawable="@drawable/shape_roundrect_orange" />
+	<item android:state_window_focused="false"
+		  android:state_enabled="true"
+		  android:drawable="@drawable/shape_roundrect_gray" />
+	<item android:state_window_focused="false"
+		  android:state_enabled="false"
+		  android:drawable="@drawable/shape_roundrect_gray" />
+	<item android:state_pressed="true"
+		  android:drawable="@drawable/shape_roundrect_gray" />
+	<item android:state_enabled="true"
+		  android:drawable="@drawable/shape_roundrect_gray" />
+	<!-- Default -->
+	<item android:drawable="@drawable/shape_roundrect_gray" />
+
+</selector>
