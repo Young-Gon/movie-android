@@ -1,8 +1,12 @@
 package com.gondev.movie.ui.detail
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.lifecycle.*
+import com.gondev.movie.BuildConfig
 import com.gondev.movie.R
 import com.gondev.movie.model.database.AppDatabase
 import com.gondev.movie.model.database.dao.CommentDao
@@ -91,10 +95,23 @@ class MovieDetailViewModel(
 			ArrayList<Photo>().apply {
 				val tokenizer = StringTokenizer(it, ",")
 				while (tokenizer.hasMoreTokens()) {
-					add(Photo(tokenizer.nextToken(), isVideo))
+					val url=tokenizer.nextToken()
+					if(isVideo)
+						add(Photo("https://img.youtube.com/vi/${getYoutubeId(url)}/default.jpg", isVideo, url))
+					else
+						add(Photo(url, isVideo))
 				}
 			}
 		}?: emptyList<Photo>()
+
+	private fun getYoutubeId(url: String):String {
+		val index=url.indexOf("=")
+		return if (index != -1) {
+			url.substring(index+1)
+		} else{
+			url.substring(url.lastIndexOf("/")+1)
+		}
+	}
 
 	val grade= this.movie.map{
 		when (it.grade){
@@ -229,7 +246,8 @@ class MovieDetailViewModel(
 		clickShowAll.value=Event(movie.value!!)
 	}
 
+	val requestOpenGallery=MutableLiveData<Event<Photo>>()
 	fun onClickPhoto(photo: Photo){
-		// TODO start galleryActivity
+		requestOpenGallery.value=Event(photo)
 	}
 }

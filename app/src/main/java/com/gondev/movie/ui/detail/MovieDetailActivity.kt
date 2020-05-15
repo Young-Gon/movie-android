@@ -1,7 +1,9 @@
 package com.gondev.movie.ui.detail
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
@@ -139,6 +141,29 @@ class MovieDetailActivity : AppCompatActivity(),
 		binding.vm?.clickShowAll?.observe(this, EventObserver{
 			startCommentListActivity(it)
 		})
+
+		// 갤러리 열기
+		binding.vm?.requestOpenGallery?.observe(this, EventObserver{ photo ->
+			if(photo .isVideo){
+				val id: String = photo.url.substring(photo.url.lastIndexOf("/") + 1)
+				watchYoutubeVideo(id)
+				return@EventObserver
+			}
+			// TODO start galleryActivity
+		})
+	}
+
+	private fun watchYoutubeVideo(id: String) {
+		val appIntent = Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:$id"))
+		try {
+			startActivity(appIntent)
+		} catch (ex: ActivityNotFoundException) {
+			val webIntent = Intent(
+				Intent.ACTION_VIEW,
+				Uri.parse("https://www.youtube.com/watch?v=$id")
+			)
+			startActivity(webIntent)
+		}
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem) =
