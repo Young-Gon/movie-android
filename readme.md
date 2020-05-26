@@ -199,7 +199,7 @@ ViewModel을 지원하기위한
 를 제공 하고 있습니다
 
 ### Kotlin coroutines with Architecture component의 이해
-(https://developer.android.com/topic/libraries/architecture/coroutines)는
+[Kotlin coroutines with Architecture component](https://developer.android.com/topic/libraries/architecture/coroutines)는
 coroutine을 사용하여 async/await 패턴으로 받아온 데이터를 VM에 적제 시키는
 모듈입니다 이 모듈이 필요한 이유는 VM내에서 안드로이드 데이터바인딩이
 작동하는 방식에 대한 이해가 필요하니 이에 대해 간략히 언급하고 지나
