@@ -222,20 +222,20 @@ Databinding을 사용하기 위해서 VM내부에 할일은 연결할 데이터�
 하지만 이방식에는 다음과 같은 문제가 있습니다  
 어떤 함수가 다음과 같이 LiveData를 반환한다고 했을때
 
-```
+``` kotlin
 fun findById(movieId: Long): LiveData<Movie>
 ```
 
 개발자는 화면이 표시 될 때 movie의 값을 받고 싶어 다음과 같이 초기화 할때
 값을 가지고 오도록 만들었습니다
 
-```
+``` kotlin
 var movie:LiveData<Movie> = movieDao.findById(movie.id)
 ```
 
 만약 초기화 후 이 *movie*의 값을 바꾸고 싶다면 어떻게 해야 할까요?
 
-```
+``` kotlin
 fun onClickSearch(keyword: String){
    movie=movieDao.findByName(keyword) 
 }
@@ -246,7 +246,7 @@ fun onClickSearch(keyword: String){
 인스턴스를 참조 하게 됩니다 이렇게 되면 값은 바꼈지만 화면은 변하지 않습니다
 예전에 바인된 livedata를 계속 참조 하고 있죠
 
-```
+``` kotlin
 class MovieViewModel(
     keyword: String
 ){
@@ -300,7 +300,7 @@ Handler, Executor, Looper등 다양한 쓰레드 관리 클레스가 있습니�
 설명 해보겠습니다  
 Retrofit API는 대충 이렇게 생겼습니다
 
-```
+``` kotlin
 fun getMovieById(@Path("id") id: Long): Call<Movie>
 ```
 
@@ -308,8 +308,7 @@ fun getMovieById(@Path("id") id: Long): Call<Movie>
 클래스를 던지는데 여기에 성공했을때, 실패 했을때 처리할 로직을 넣은다음 콜을
 합니다
 
-```
-
+``` kotlin
 val call:Call<Movie> = api.getMovieById(12)
 call.enqueue(object: Callback<Movie>{
     override fun onFailure(call: Call<Movie>, t: Throwable) {
@@ -326,10 +325,10 @@ call.enqueue(object: Callback<Movie>{
 
 하지만 코루틴을 사용하면 이렿게 바뀝니다
 
-```
+``` kotlin
  fun getMovieById(@Path("id") id: Long): Movie
 ```
-```
+``` kotlin
 try{
     val result: Movie=api.getMovieById(12)
     TODO("통신 성공시 할일")
@@ -346,10 +345,10 @@ try{
 
 위 조건을 적용해서 코드를 다시 짜면 이렇게 됩니다
 
-```
+``` kotlin
 suspend fun getMovieById(@Path("id") id: Long): Movie
 ```
-```
+``` kotlin
 CoroutineScope(Dispatchers.IO).launch {
     try{
         val result: Movie=api.getMovieById(12)
@@ -372,13 +371,13 @@ CoroutineScope(Dispatchers.IO).launch {
 이제 DB애서 쿼리 해혼 값과 네트워크에서 API로 호출한 값을 동시에 다룰려면
 어떻게 해야 할까요? 참고로 디비의 함수 모양은 이렇게 생겼습니다
 
-```
+``` kotlin
 fun findById(movieId: Long): LiveData<Movie>
 ```
 
 네트워크는 이렇게 생겼습니다
 
-```
+``` kotlin
 suspend fun getMovieById(@Path("id") id: Long): Movie
 ```
 
@@ -393,7 +392,7 @@ livedata라는 람다식이 있습니다 이것 자체가 CoroutineScope을 상�
 있습니다  
 예를 들어 보겠습니다 아까 우리가 사용한 movie: LiveData<Movie>에 값을 집어
 넣는다고 했을때
-```
+``` kotlin
 val movie = liveData {
     // 디비로 부터 값 설정
     val disposable= emitSource(movieDao.findById(movie.id))
@@ -413,7 +412,7 @@ val movie = liveData {
         emitSource(movieDao.findById(movie.id))
     }
 }
-```
+``` kotlin
       니다 이 coroutines with Architecture component가 없었을 때는 수만은
       Transformation.map()과 switchMap()과 MediatorLiveData와
       MutableLiveData()와 그들이 만들어 내는 코드 블럭들이 필요 했습니다
