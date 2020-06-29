@@ -201,9 +201,19 @@ ViewModel을 지원하기위한
 ### Kotlin coroutines with Architecture component의 이해
 [Kotlin coroutines with Architecture component](https://developer.android.com/topic/libraries/architecture/coroutines)는
 coroutine을 사용하여 async/await 패턴으로 받아온 데이터를 VM에 적제 시키는
-모듈입니다 이 모듈이 필요한 이유는 VM내에서 안드로이드 데이터바인딩이
-작동하는 방식에 대한 이해가 필요하니 이에 대해 간략히 언급하고 지나
-가겠습니다
+모듈입니다 이 모듈이 필요한 이유는 길지만 시작은 MVVM 페턴을 설명하는 구글
+셈플 예제
+[GithubBrowserwithArchitectureComponents](https://github.com/googlesamples/android-architecture-components/tree/master/GithubBrowserSample)에
+서 시작합니다  
+이 셈플에서는 liveData를 이용하여 MVVM 페턴으로 앱을 제작하는 방법이
+나오는데 GitHub에서 repository를 긁어서 보여 주는 앱입니다 보시면
+아시겠지만 꽤 복잡한 구조인데 전반적으로 VM을 만드는 방식이나 Room을 디비
+케쉬로 이용하는 방법 LiveData를 이용하는 방법에 대해서 잘 만들어진 앱입니다
+문제가 되는 부분은 Retrofit을 사용하여 네트워킹을 하기위해서
+`LiveDataCallAdapter`라는 아답터를 사용합니다 이 아답터는 retrofit으로 API
+콜을 하면 결과값을 파싱하여 LiveData형태로 만들어 주는 아답터입니다 이것이
+왜 문제가 되는지 알라볼려면 VM내에서 안드로이드 데이터바인딩이 작동하는
+방식에 대한 이해가 필요하니 이에 대해 간략히 언급하고 지나 가겠습니다
 
 #### 안드로이드 데이터바인딩의 작동 방식
 안드로이드 데이터 바인딩의 개념은 변수와 화면을 연결(binding)을 연결시켜
@@ -262,17 +272,24 @@ class MovieViewModel(
 
 ```
 
-이렇게 livedata를 변경 하지 않으면서 livedata내의 값을 바꾸려면 movie가
-참조하는 값을 livedata로 바꾸고 참조하는 livedata의 값을 바꾸면 따라서
-movie가 바뀔수 있도록 해야 합니다 이런식으로 livedata를 제대로 사용하기
-위해서는 많은 고민이 필요 합니다 게다가 네트워크 통신을 하게 되면 또
-livedata 형식이 아니라 일반 변수 형식이 튀어 나옵니다  
-이런식으로 다른 스레드에서 가저온 데이터를 넣는 다거나 livedata 와 일반
-변수가 뒤썩여 있다거나 livedata의 타입이 바뀐다거나 여러가지 상황에 따라
-처리 방법이 다양합니다 게다가 이런식으로 서너번만 사용하면 소스가 뒤죽
-박죽이 되고 맙니다
+이렇게 livedata를 변경 하지 않으면서 livedata내의 값을 바꾸려면 변경 시키는
+값을 미리 livedata형식으로 가지고 있다가 그 값이 참조하는 livedata의 값을
+바꾸면 따라서 movie가 바뀔수 있도록 해야 합니다 무슨 말인지 잘 모르겠죠?
+더구나 google 셈플 에서는 room에서 LiveData를 받아오고 retrofit에서도
+livedata를 받아 옵니다 두개의 livedata를 어떻게 하나의 livedata로 만들까요?
+google 셈플에서는 `NetworkBoundResource`라는 클레스를 만들어 처리 하고
+있습니다 내부적으로 `MediatorLiveData`를 사용하여 구현하는데, 이 클레스가
+더 복잡해지는 이유는 그냥 두개의 livedata를 합치는 것이 아닌 중간에 네트워크
+상테를 저장하는 `Resource`라는 클레스가 끼어 듭니다 이 `Resource`는
+success, error, loading이라는 3가지 상태의 네트워크 상태를 표시하는데
+`Livedata<Resource<Movie>>`와 같이 livedata와 livedata가 가리키려는 값
+사이에 끼여 듭니다 결과적으로 `Livedata<Movie>`를 반환하는 데이터베이스와
+네트워크를 `Livedata<Resource<Movie>>`같은 방식으로 변환해야 하는데 이게
+쉽지가 않습니다 또한 결과 값이 필요가 없는 post나 delete METHOD 들은 이
+`NetworkBoundResource` 클레스를 사용할 수 없습니다 이쯤되면 왜 굳이
+livedata를 사용해야 하나 하는 회의감이 들기 시작합니다
 
-이런 상황을 위해 안드로이드에서는 coroutine 과 livedata를 묶어주는 모듈의
+이런 상황을 위해 안드로이드에서는 livedata좀더 유연하고 사용하기 쉽게 바꿔줄
 필요성을 느끼게 되었습니다
 
 #### Kotlin coroutines
@@ -382,7 +399,7 @@ suspend fun getMovieById(@Path("id") id: Long): Movie
 ```
 
 두개의 리턴값이 다르죠? 하지만 이것을 한 변수에 담고 싶습니다 디비 쿼리해온
-갑을 케쉬로 화면을 구성하고 네트워크로 들어 온값으로 최신 정보로 변경 하는
+값을 케쉬로 화면을 구성하고 네트워크로 들어온 값으로 최신 정보로 변경 하는
 것이죠 어떻게 해야 할까요? 이럴때 사용하기 위해서 구글에서 Kotlin
 coroutines with Architecture component을 제작 했습니다  
 사용법은 간단합니다  
@@ -402,7 +419,6 @@ val movie = liveData {
         // 디비의 값을 변경해도 livedata의 값이 자동으로 변경되지 않도록 
         // livedata와 db 쿼리의 연결 해제 
         disposable.dispose()
-        detail.vote_like=movie.vote_like
         // 디비 값 변경
         movieDao.insert(detail)
         // 다시 디비의 값 설정
@@ -412,15 +428,52 @@ val movie = liveData {
         emitSource(movieDao.findById(movie.id))
     }
 }
+```
+보시는 봐와 같이 아주 깔끔한 코드를 만들수 있습니다. 비동기콜이 자연스러운
+동기 콜처럼 보이기 때문에 필요한곳에 원하는 코드를 넣으면 되고요  
+값이 바뀌는 시점에 바뀐 값을 넣어 주면 됩니다  
+그렇다면 이코드를 google 셈플처럼 livedata와 movie 사이에 Resource를 넣어
+네트워크 상테를 넣고 싶으면 어떻게 해야 할까요?  
+이것도 아주 쉽습니다
 ``` kotlin
-      니다 이 coroutines with Architecture component가 없었을 때는 수만은
-      Transformation.map()과 switchMap()과 MediatorLiveData와
-      MutableLiveData()와 그들이 만들어 내는 코드 블럭들이 필요 했습니다
-      수시로 발생하는 버그들은 덤이구요  
-      이 coroutines with Architecture component을 사용하고 나서 부터는
-      아주 깔끔한 코드들을 얻을수 있게 되었습니다 물론 유연한 구조 떄문에
-      어디서든지 사용할 수 있고요 수시로 나오는 버그들이 줄어든것은
-      덤이었습니다다
+val movie = liveData {
+    val disposable= emitSource(movieDao.findById(movie.id).map{
+        // 네트워크 상태를 표시하는 Resource 클레스르 사용하여 최종 결과물 변경
+        Resource.loading(it)
+    })
+    try {
+        val detail=api.getMovieListById(movie.id) 
+        disposable.dispose()
+        movieDao.insert(detail)
+        emitSource(movieDao.findById(movie.id).map{
+            // 네트워크 상태를 success로 변경
+            Resource.success(it)
+        })
+    } catch (e: java.lang.Exception) {
+        Timber.e(e)
+        emitSource(movieDao.findById(movie.id).map{
+            // 네트워크 상태를 error로 변경
+            Resource.error(it)
+        })
+    }
+} 
+```
+
+이 coroutines with Architecture component가 없었을 때는 맞지 않는
+리턴값들을 원하는 형태로 바꾸기 위해서 수많은 Transformation.map()과
+switchMap()과 MediatorLiveData와 MutableLiveData()와 그들이 만들어 내는
+코드 블럭들이 필요 했습니다 수시로 발생하는 버그들은 덤이구요  
+이 라이브러리를 사용하고 나서 부터는 아주 깔끔한 코드들을 얻을수 있게
+되었습니다 물론 유연한 구조 떄문에 어디서든지 사용할 수 있고요 수시로 나오는
+버그들이 줄었습니다
+
+안드로이드는 수년간 정말 많은 것을 바꿔 왔습니다 옜날에 AsyncTask를 사용하던
+시잘과 비교하면 완전 다른 것이 되어 버렸죠 IDE부터 언어 앱 구조 까지요
+하지만 제가 느끼기에 안드로이드는 이제서야 완벽에 가까워 진것 같습니다
+지금까지는 개발하면서 나사하나가 빠진것 같은 느낌이 들때가 많았기 때문이죠
+아무쪼록 이글을 보시는 분들도 분명 MVVM페턴을 학습 하시다가 어딘가 부족한
+부분이 생겨서 찾고 찾다가 여기까지 오시지 않으셨나 생각이 듭니다 그런분들꼐
+이 소스가 조금이나마 도움이 되었으면 좋겠습니다
 
 
 ### 사용 라이브러리
