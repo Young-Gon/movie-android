@@ -9,13 +9,13 @@
 ## 빌드 환경
 두가지 타입의 빌드 환경이 있습니다
 
-1.   **local:** 이 엡의 서버 격인
-     https://github.com/Young-Gon/movie-backend과 통신 하는 환경입니다
-     movie-backend를 다운 받아 로컬로 테스트 할수 있습니다
-2.   **outline:** 이 프로젝트 외부 서버와 통신 하는 환경입니다 이미 구축
-     되어있는 서버에 접근 합니다 빠른 테스트를 원하시면 outline으로
-     빌드하시기 바랍니다
-
+1.   **production:** 이 프로젝트 외부 서버와 통신 하는 환경입니다 이미 구축
+     되어있는 서버에 접근 합니다 빠른 테스트를 원하시면 production으로
+     빌드하시기 바랍니다 기본 설정입니다
+2.   **local:** 로컬에서
+     [movie-backend](https://github.com/Young-Gon/movie-backend) 를 다운
+     받아 테스트 할수 있습니다 (테스트 하기 편하도록 몇개의 영화정보를 포함
+     하고 있습니다)
 
 ## 프로젝트의 구조
 프로젝트의 기본 구조는
@@ -155,14 +155,14 @@ class MainViewModel {
 ```
 1. 안드로이드 XML에서 뷰모델을 선언 합니다
 2. XML상에서 필요한 데이터를 뷰모델에서 가저다 씁니다.  
-   여기서는 *et_lottie_list*에서 *vm.name*을 사용하고 있습니다
-3. 엑티비티에서 xml을 연결시키는 *setContentView()* 함수를
-   *DataBindingUtil*을 사용하여 *binding* 객체를 통해 연결 시킵니다
-4. *binding* 객체에 *ViewModel*을 할당 하면 1에서 선언한 뷰모델로
+   여기서는 `et_lottie_list`에서 `vm.name`을 사용하고 있습니다
+3. 엑티비티에서 xml을 연결시키는 `setContentView()` 함수를
+   `DataBindingUtil`을 사용하여 `binding` 객체를 통해 연결 시킵니다
+4. `binding* 객체에 `ViewModel`을 할당 하면 1에서 선언한 뷰모델로
    인스턴스가 들어 옵니다
-5. *et_lottie_list*에서 클릭 이벤트가 발생하면 VM으로 전달되고 VM에서는
+5. `et_lottie_list`에서 클릭 이벤트가 발생하면 VM으로 전달되고 VM에서는
    데이터를 변경 합니다
-6. 데이터가 변경되면 2에서 연결된 *et_lottie_list*의 화면이 갱신됩니다
+6. 데이터가 변경되면 2에서 연결된 `et_lottie_list`의 화면이 갱신됩니다
 
 
 이 페턴의 장점은 View 스스로 화면을 갱신 함으로 화면 관련 로직은 View에,
