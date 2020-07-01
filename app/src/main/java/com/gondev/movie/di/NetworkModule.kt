@@ -2,10 +2,7 @@ package com.gondev.movie.di
 
 import com.gondev.movie.BuildConfig
 import com.gondev.movie.model.network.api.MovieAPI
-import com.gondev.movie.model.network.converter.ResultConverterFactory
-import com.google.gson.ExclusionStrategy
-import com.google.gson.FieldAttributes
-import com.google.gson.GsonBuilder
+import com.google.gson.*
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -14,6 +11,9 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.reflect.Type
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 
 
@@ -50,7 +50,11 @@ val networkModule = module {
 	}
 
 	single {
-		GsonBuilder()
+		GsonBuilder().registerTypeAdapter(LocalDateTime::class.java, object : JsonDeserializer<LocalDateTime> {
+				override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): LocalDateTime {
+					return LocalDateTime.parse(json.asString, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"))
+				}
+			})
 			.setExclusionStrategies(AnnotationBasedExclusionStrategy())
 			.create()
 	}

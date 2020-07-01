@@ -6,10 +6,7 @@ import com.gondev.movie.model.database.entity.Movie
 import com.gondev.movie.model.network.api.OrderType.Companion.CURATION
 import com.gondev.movie.model.network.api.OrderType.Companion.RESERVATION
 import com.gondev.movie.model.network.api.OrderType.Companion.SCHEDULED
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
-
+import retrofit2.http.*
 
 
 @IntDef(RESERVATION, CURATION, SCHEDULED)
@@ -72,6 +69,9 @@ interface MovieAPI {
 	/**
 	 * 한줄평 쓰기
 	 */
-	@GET("movie/{id}")
-	suspend fun writeComment(@Path("id") commentId: Long, @Query("writer") writer: String, @Query("rating") rating: Float, @Query("contents") contents: String)
+	@POST("movie/{moviId}/comment")
+	suspend fun writeComment(@Path("moviId") moviId: Long, @Query("writer") writer: String, @Query("rating") rating: Float, @Query("contents") contents: String): Long
+
+	@POST("movie/{moviId}/comment")
+	suspend fun writeComment(@Path("moviId") moviId: Long, @Body comment: Comment): Long
 }

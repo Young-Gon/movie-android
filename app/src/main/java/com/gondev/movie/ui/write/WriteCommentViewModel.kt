@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gondev.movie.R
 import com.gondev.movie.model.database.AppDatabase
+import com.gondev.movie.model.database.entity.Comment
 import com.gondev.movie.model.database.entity.Movie
 import com.gondev.movie.model.network.api.MovieAPI
 import com.gondev.movie.util.Event
@@ -42,7 +43,10 @@ class WriteCommentViewModel(
 
 		viewModelScope.launch{
 			try {
-				api.writeComment(movie.id, "yg1028", rating.value!!, textComment.value!!)
+				//api.writeComment(movie.id, "yg1028", rating.value!!, textComment.value!!)
+				api.writeComment(movie.id,
+					Comment(0,movie.id,"yg1028",null,null,null, rating.value!!,textComment.value!!,0)
+				)
 				val result= api.getCommentList(movie.id)
 				commentDao.insert(result)
 				requestFinish.value=Event(0)

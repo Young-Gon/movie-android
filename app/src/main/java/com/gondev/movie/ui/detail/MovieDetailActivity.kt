@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
@@ -32,6 +33,7 @@ import com.gondev.movie.ui.util.BindingActivityDelegate
 import com.gondev.movie.ui.util.IBindingActivityDelegate
 import com.gondev.movie.ui.write.startWriteCommentActivity
 import com.gondev.movie.util.EventObserver
+import com.gondev.movie.util.dpToPx
 import com.gondev.recyclerviewadapter.RecyclerViewListAdapter
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 import org.koin.androidx.viewmodel.ext.android.getViewModel
@@ -113,6 +115,14 @@ class MovieDetailActivity : AppCompatActivity(),
 						null, is Result.Loading -> "한줄평을 가저 오는 중입니다..."
 						is Result.Success -> "한줄평이 없습니다."
 						is Result.Error -> "네트워크 오류 입니다"
+					}
+					layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+						setMargins(
+							16.dpToPx(resources.displayMetrics),
+							8.dpToPx(resources.displayMetrics),
+							16.dpToPx(resources.displayMetrics),
+							8.dpToPx(resources.displayMetrics)
+						)
 					}
 				})
 				return@Observer

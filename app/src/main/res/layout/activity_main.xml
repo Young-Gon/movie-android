@@ -44,19 +44,19 @@
 				tools:listitem="@layout/item_movie_viewpager" />
 
 		<Button
-				android:id="@+id/btnDetail"
-				android:layout_width="160dp"
-				android:layout_height="wrap_content"
-				android:layout_marginBottom="8dp"
-				android:background="@drawable/shape_roundrect_orange_fill"
-				android:text="상세보기"
-				android:textColor="@android:color/white"
-				android:textSize="18sp"
-				android:foreground="@drawable/ripple_button_white"
-				android:onClick="@{()->vm.onClickDetail()}"
-				app:layout_constraintBottom_toBottomOf="parent"
-				app:layout_constraintEnd_toEndOf="parent"
-				app:layout_constraintStart_toStartOf="parent"/>
+			android:id="@+id/btnDetail"
+			android:layout_width="160dp"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="32dp"
+			android:background="@drawable/shape_roundrect_orange_fill"
+			android:foreground="@drawable/ripple_button_white"
+			android:onClick="@{()->vm.onClickDetail()}"
+			android:text="상세보기"
+			android:textColor="@android:color/white"
+			android:textSize="18sp"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toStartOf="parent" />
 
 		<TextView
 				android:id="@+id/txtDescription"

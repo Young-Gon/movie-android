@@ -7,7 +7,7 @@ android {
     compileSdkVersion 29
     defaultConfig {
         applicationId "com.gondev.movie"
-        minSdkVersion 24
+        minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -32,8 +32,9 @@ android {
     flavorDimensions "network"
     productFlavors {
         outline {  // 개발 서버로 연결할 수 있는 환경입니다
+            isDefault true
             dimension "network"
-            buildConfigField "String", "url_base", "\"http://boostcourse-appapi.connect.or.kr:10000/\""
+            buildConfigField "String", "url_base", "\"https://gondev.xyz/\""
         }
         local {  // 운영 서버로 연결할 수 있는 환경입니다
             dimension "network"

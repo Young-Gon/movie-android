@@ -147,7 +147,6 @@ data class Movie (
 ):IMovie, Parcelable
 
 class MovieAndComment(
-
 	@Embedded
 	val movie: Movie,
 

@@ -38,7 +38,7 @@ class CommentListViewModel(
 		} catch (e: Exception) {
 			Timber.e(e)
 			emitSource(commentDao.findById(movie.id).map {
-				Result.error(e,it)
+				Result.error(e, it)
 			})
 		}
 	}

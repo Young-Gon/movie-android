@@ -4,6 +4,7 @@
 		xmlns:tools="http://schemas.android.com/tools"
 		tools:showIn="@layout/activity_comment_list">
 <data class="OneLineCommentItemBinding">
+	<import type="com.gondev.movie.model.database.entity.CommentKt"/>
 	<variable
 			name="comment"
 			type="com.gondev.movie.model.database.entity.Comment" />
@@ -49,7 +50,7 @@
 				android:layout_height="wrap_content"
 				android:layout_marginTop="4dp"
 				tools:text="10분전"
-				android:text="@{comment.time}"
+				android:text="@{CommentKt.getDuration(comment.modifyAt)}"
 				android:textSize="12sp"
 				app:layout_constraintStart_toStartOf="@+id/txtUserID"
 				app:layout_constraintTop_toBottomOf="@+id/txtUserID"/>
