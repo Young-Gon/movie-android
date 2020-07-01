@@ -155,7 +155,10 @@ class MovieDetailActivity : AppCompatActivity(),
 		// 갤러리 열기
 		binding.vm?.requestOpenGallery?.observe(this, EventObserver{ photo ->
 			if(photo .isVideo){
-				val id: String = photo.url.substring(photo.url.lastIndexOf("/") + 1)
+				if(photo.link==null)
+					return@EventObserver
+
+				val id: String = photo.link.substring(photo.link.lastIndexOf("/") + 1)
 				watchYoutubeVideo(id)
 				return@EventObserver
 			}

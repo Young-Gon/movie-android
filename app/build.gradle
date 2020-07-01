@@ -31,14 +31,14 @@ android {
 
     flavorDimensions "network"
     productFlavors {
-        outline {  // 개발 서버로 연결할 수 있는 환경입니다
+        local {  // 개발 서버로 연결할 수 있는 환경입니다
             isDefault true
             dimension "network"
-            buildConfigField "String", "url_base", "\"https://gondev.xyz/\""
-        }
-        local {  // 운영 서버로 연결할 수 있는 환경입니다
-            dimension "network"
             buildConfigField "String", "url_base", "\"http://192.168.1.71:8080/\""
+        }
+        production {  // 운영 서버로 연결할 수 있는 환경입니다
+            dimension "network"
+            buildConfigField "String", "url_base", "\"https://gondev.xyz/\""
         }
     }
 
