@@ -45,14 +45,14 @@ interface MovieAPI {
 	/**
 	 * 무비의 좋아요 등록
 	 */
-	@GET("movie/{id}/increaseLike")
-	suspend fun increaseLike(@Path("id") id: Long, @Query("likeyn") likeyn: String): String
+	@PUT("movie/{id}/increaseLike")
+	suspend fun increaseLike(@Path("id") id: Long, @Query("likeyn") likeyn: String)
 
 	/**
 	 * 무비의 싫어요 등록
 	 */
-	@GET("movie/{id}/increaseDislike")
-	suspend fun increaseDislike(@Path("id") id: Long, @Query("dislikeyn") dislikeyn: String): String
+	@PUT("movie/{id}/increaseDislike")
+	suspend fun increaseDislike(@Path("id") id: Long, @Query("dislikeyn") dislikeyn: String)
 
 	/**
 	 * 무비 한줄평 목록

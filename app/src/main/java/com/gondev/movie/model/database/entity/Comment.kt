@@ -28,12 +28,12 @@ data class Comment (
 	var recommend: Int //":0
 )
 
-fun getDuration(from: LocalDateTime) =
-	Duration.between(from, LocalDateTime.now()).let { duration ->
+fun getDuration(from: LocalDateTime?) = from?.let {
+	Duration.between(it, LocalDateTime.now()).let { duration ->
 		when {
 			duration.toDays() > 0 -> "${duration.toDays()}일 전"
 			duration.toHours() > 0 -> "${duration.toHours()}시간 전"
 			duration.toMinutes() > 0 -> "${duration.toMinutes()}분 전"
 			else -> "방금"
 		}
-	}
+	} }
