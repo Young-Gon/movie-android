@@ -7,7 +7,7 @@
 	<import type="com.gondev.movie.model.database.entity.CommentKt"/>
 	<variable
 			name="comment"
-			type="com.gondev.movie.model.database.entity.Comment" />
+			type="com.gondev.movie.model.database.entity.IComment" />
 	<variable
 			name="vm"
 			type="com.gondev.movie.ui.detail.IClickRecommend" />

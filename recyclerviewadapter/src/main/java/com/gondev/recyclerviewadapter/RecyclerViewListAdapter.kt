@@ -71,22 +71,22 @@ import androidx.recyclerview.widget.RecyclerView
  * @see RecyclerViewHolder
  * @see MultiRecyclerViewListAdapter
  */
-open class RecyclerViewListAdapter<T, V : ViewDataBinding>(
+open class RecyclerViewListAdapter<T>(
 	@LayoutRes private val layoutResId: Int,
 	protected val bindingVariableId: Int? = null,
 	diffCallback: DiffUtil.ItemCallback<T>,
 	protected val lifecycleOwner: LifecycleOwner?=null,
 	protected vararg val param: Pair<Int, Any>
-) : ListAdapter<T, RecyclerViewHolder<T, V>>(diffCallback) {
+) : ListAdapter<T, RecyclerViewHolder<T>>(diffCallback) {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-		RecyclerViewHolder<T, V>(
+		RecyclerViewHolder<T>(
 			(DataBindingUtil.inflate(
 				LayoutInflater.from(parent.context),
 				layoutResId,
 				parent,
 				false
-			) as V).apply {
+			) as ViewDataBinding).apply {
 				param.forEach {
 					setVariable(it.first, it.second)
 				}
@@ -96,7 +96,7 @@ open class RecyclerViewListAdapter<T, V : ViewDataBinding>(
 			}, bindingVariableId
 		)
 
-	override fun onBindViewHolder(holder: RecyclerViewHolder<T, V>, position: Int) =
+	override fun onBindViewHolder(holder: RecyclerViewHolder<T>, position: Int) =
 		holder.onBindViewHolder(getItem(position))
 }
 
@@ -109,8 +109,8 @@ open class RecyclerViewListAdapter<T, V : ViewDataBinding>(
  * @param bindingVariableId 아이템의 ViewDataBinding 인스턴스에서 사용하는 아이템의 BR
  * @see RecyclerViewListAdapter
  */
-class RecyclerViewHolder<in T, out V : ViewDataBinding>(
-	val binding: V,
+class RecyclerViewHolder<in T>(
+	val binding: ViewDataBinding,
 	private val bindingVariableId: Int? = null
 ) : RecyclerView.ViewHolder(binding.root) {
 

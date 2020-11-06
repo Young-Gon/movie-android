@@ -2,8 +2,22 @@ package com.gondev.movie.model.database.entity
 
 import androidx.room.*
 import com.gondev.movie.model.database.converter.LocalDateTimeConverter
+import com.gondev.recyclerviewadapter.ItemType
+import com.gondev.movie.R
 import java.time.Duration
 import java.time.LocalDateTime
+
+interface IComment {
+	val id: Long
+	val movieId: Long
+	val writer: String
+	val writer_image: String?
+	val createAt: LocalDateTime?
+	val modifyAt: LocalDateTime?
+	val rating: Float
+	val contents: String
+	val recommend: Int //":0
+}
 
 @TypeConverters(LocalDateTimeConverter::class)
 @Entity(
@@ -17,16 +31,24 @@ import java.time.LocalDateTime
 )
 data class Comment (
 	@PrimaryKey
-	val id: Long,
-	val movieId: Long,
-	val writer: String,
-	val writer_image: String?,
-	val createAt: LocalDateTime?, //":"2018-07-20 10:30:30",
-	val modifyAt: LocalDateTime?, // :1532050229,
-	val rating: Float, //":7.0,
-	val contents: String, //":"ㅅㅅㅅㅅ",
-	var recommend: Int //":0
-)
+	override val id: Long,
+	override val movieId: Long,
+	override val writer: String,
+	override val writer_image: String?,
+	override val createAt: LocalDateTime?, //":"2018-07-20 10:30:30",
+	override val modifyAt: LocalDateTime?, // :1532050229,
+	override val rating: Float, //":7.0,
+	override val contents: String, //":"ㅅㅅㅅㅅ",
+	override val recommend: Int //":0
+) : IComment
+
+data class CommentAndItemType(
+	@Embedded
+	val comment: Comment
+): IComment by comment, ItemType{
+	@Ignore
+	override val layoutResId: Int = R.layout.item_oneline_comment
+}
 
 fun getDuration(from: LocalDateTime?) = from?.let {
 	Duration.between(it, LocalDateTime.now()).let { duration ->

@@ -2,13 +2,12 @@ package com.gondev.movie.model.database.entity
 
 import android.os.Parcelable
 import androidx.annotation.IntDef
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.Relation
+import androidx.room.*
+import com.gondev.movie.R
 import com.gondev.movie.model.database.entity.Vote.Companion.DISLIKE
 import com.gondev.movie.model.database.entity.Vote.Companion.LIKE
 import com.gondev.movie.model.database.entity.Vote.Companion.NONE
+import com.gondev.recyclerviewadapter.ItemType
 import kotlinx.android.parcel.Parcelize
 
 
@@ -140,11 +139,27 @@ data class Movie (
 	override val synopsis: String?,
 	override val director: String?,
 	override val actor: String?,
-	override var like: Long,
-	override var dislike: Long,
+	override val like: Long,
+	override val dislike: Long,
 	@Vote
-	override var vote_like: Int
+	override val vote_like: Int
 ):IMovie, Parcelable
+
+data class MovieAndItemType(
+	@Embedded
+	val movie: Movie
+): IMovie by movie, ItemType{
+	@Ignore
+	override val layoutResId: Int = R.layout.item_movie_detail_header
+}
+
+data class MovieAndTail(
+	@Embedded
+	val movie: Movie
+): IMovie by movie, ItemType{
+	@Ignore
+	override val layoutResId: Int = R.layout.item_movie_detail_tail
+}
 
 class MovieAndComment(
 	@Embedded

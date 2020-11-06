@@ -3,6 +3,7 @@ package com.gondev.movie.model.database.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.gondev.movie.model.database.entity.Movie
+import com.gondev.movie.model.database.entity.MovieAndItemType
 import com.gondev.movie.model.network.api.OrderType
 
 @Dao
@@ -17,7 +18,7 @@ interface MovieDAO {
 	fun findOrderByDate(): LiveData<List<Movie>>
 
 	@Query("SELECT * FROM Movie WHERE id=:movieId")
-	fun findById(movieId: Long): LiveData<Movie>
+	fun findById(movieId: Long): LiveData<MovieAndItemType>
 
 	@Insert
 	suspend fun insertAllOrAbort(movies: List<Movie>)

@@ -10,13 +10,12 @@ import com.gondev.movie.BuildConfig
 import com.gondev.movie.R
 import com.gondev.movie.model.database.AppDatabase
 import com.gondev.movie.model.database.dao.CommentDao
-import com.gondev.movie.model.database.entity.Comment
-import com.gondev.movie.model.database.entity.Movie
-import com.gondev.movie.model.database.entity.Vote
+import com.gondev.movie.model.database.entity.*
 import com.gondev.movie.model.network.api.MovieAPI
 import com.gondev.movie.model.network.dto.Photo
 import com.gondev.movie.model.util.Result
 import com.gondev.movie.util.Event
+import com.gondev.recyclerviewadapter.ItemType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,32 +30,32 @@ import java.util.*
  *
  * 확장 함수로 구현할 경우 파라미터가 많아서 view에서 호출이 힘들어 진다
  */
-interface IClickRecommend{
-	fun onClickRecommend(comment: Comment)
+interface IClickRecommend {
+    fun onClickRecommend(comment: IComment)
 }
 
 class ClickRecommend(
-	private val commentDao: CommentDao,
-	private val api: MovieAPI
-): IClickRecommend{
+    private val commentDao: CommentDao,
+    private val api: MovieAPI
+) : IClickRecommend {
 
-	/**
-	 * 한줄평 추천 등록
-	 * @param comment 추천할 한줄평
-	 */
-	override fun onClickRecommend(comment: Comment) {
-		CoroutineScope(Dispatchers.IO).launch{
-			try {
-				// 로그인 시스템이 없으니 일단 하드코딩을 하자
-				// 구글 로그인을 사용해도 좋을 것 같다
-				api.increaseRecommend(comment.id, "yg1028")
-				comment.recommend++
-				commentDao.insert(comment)
-			} catch (e: java.lang.Exception) {
-				Timber.e(e)
-			}
-		}
-	}
+    /**
+     * 한줄평 추천 등록
+     * @param comment 추천할 한줄평
+     */
+    override fun onClickRecommend(comment: IComment) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // 로그인 시스템이 없으니 일단 하드코딩을 하자
+                // 구글 로그인을 사용해도 좋을 것 같다
+                api.increaseRecommend(comment.id, "yg1028")
+                //commentDao.insert(comment.copy(recommend = comment.recommend + 1))
+                commentDao.updateRecommend(comment.id, comment.recommend + 1)
+            } catch (e: java.lang.Exception) {
+                Timber.e(e)
+            }
+        }
+    }
 }
 
 /**
@@ -64,190 +63,233 @@ class ClickRecommend(
  * @see MovieDetailActivity
  */
 class MovieDetailViewModel(
-	private val applicationContext: Context,
-	db: AppDatabase,
-	private val commentDao: CommentDao,
-	private val api: MovieAPI,
-	movie: Movie
-):ViewModel(), IClickRecommend by ClickRecommend(commentDao, api) {
-	private val movieDao=db.getMovieDao()
+    private val applicationContext: Context,
+    db: AppDatabase,
+    private val commentDao: CommentDao,
+    private val api: MovieAPI,
+    movie: Movie
+) : ViewModel(), IClickRecommend by ClickRecommend(commentDao, api) {
+    private val movieDao = db.getMovieDao()
 
-	val movie = liveData {
-		val disposable= emitSource(movieDao.findById(movie.id))
-		try {
-			val detail=api.getMovieListById(movie.id)
-			disposable.dispose()
-			detail.vote_like=movie.vote_like
-			movieDao.insert(detail)
-			emitSource(movieDao.findById(movie.id))
-		} catch (e: java.lang.Exception) {
-			Timber.e(e)
-			emitSource(movieDao.findById(movie.id))
-		}
-	}
+    val movie = liveData {
+        val disposable = emitSource(movieDao.findById(movie.id))
+        try {
+            val detail = api.getMovieListById(movie.id)
+            disposable.dispose()
+            movieDao.insert(detail.copy(vote_like = movie.vote_like))
+            emitSource(movieDao.findById(movie.id))
+        } catch (e: java.lang.Exception) {
+            Timber.e(e)
+            emitSource(movieDao.findById(movie.id))
+        }
+    }
 
-	val photos= this.movie.map{
-		parseList(it.photos, false) + parseList(it.videos, true)
-	}
+    val photos = this.movie.map {
+        parseList(it.photos, false) + parseList(it.videos, true)
+    }
 
-	private fun parseList(listString: String?, isVideo: Boolean) =
-		listString?.let {
-			ArrayList<Photo>().apply {
-				val tokenizer = StringTokenizer(it, ",")
-				while (tokenizer.hasMoreTokens()) {
-					val url=tokenizer.nextToken()
-					if(isVideo)
-						add(Photo("https://img.youtube.com/vi/${getYoutubeId(url)}/default.jpg", isVideo, url))
-					else
-						add(Photo(url, isVideo))
-				}
-			}
-		}?: emptyList<Photo>()
+    private fun parseList(listString: String?, isVideo: Boolean) =
+        listString?.let {
+            ArrayList<Photo>().apply {
+                val tokenizer = StringTokenizer(it, ",")
+                while (tokenizer.hasMoreTokens()) {
+                    val url = tokenizer.nextToken()
+                    if (isVideo)
+                        add(
+                            Photo(
+                                "https://img.youtube.com/vi/${getYoutubeId(url)}/default.jpg",
+                                isVideo,
+                                url
+                            )
+                        )
+                    else
+                        add(Photo(url, isVideo))
+                }
+            }
+        } ?: emptyList<Photo>()
 
-	private fun getYoutubeId(url: String):String {
-		val index=url.indexOf("=")
-		return if (index != -1) {
-			url.substring(index+1)
-		} else{
-			url.substring(url.lastIndexOf("/")+1)
-		}
-	}
+    private fun getYoutubeId(url: String): String {
+        val index = url.indexOf("=")
+        return if (index != -1) {
+            url.substring(index + 1)
+        } else {
+            url.substring(url.lastIndexOf("/") + 1)
+        }
+    }
 
-	val grade= this.movie.map{
-		when (it.grade){
-			12 -> R.drawable.ic_12
-			15 -> R.drawable.ic_15
-			19 -> R.drawable.ic_19
-			else -> R.drawable.ic_all
-		}
-	}
+    val grade = this.movie.map {
+        when (it.grade) {
+            12 -> R.drawable.ic_12
+            15 -> R.drawable.ic_15
+            19 -> R.drawable.ic_19
+            else -> R.drawable.ic_all
+        }
+    }
 
-	val commentList = liveData<Result<List<Comment>>> {
-		val disposable= emitSource(commentDao.findByIdLimit2(movie.id).map {
-			Result.loading(it)
-		})
+    val commentList = liveData<Result<List<CommentAndItemType>>> {
+        val disposable = emitSource(commentDao.findByIdLimit2(movie.id).map {
+            Result.loading(it)
+        })
 
-		try {
-			val result=api.getCommentList(movie.id,2)
-			disposable.dispose()
-			commentDao.insert(result)
-			emitSource(commentDao.findByIdLimit2(movie.id).map{
-				Result.success(it)
-			})
-		} catch (e: java.lang.Exception) {
-			Timber.e(e)
-			emitSource(commentDao.findByIdLimit2(movie.id).map{
-				Result.error(e, it)
-			})
-		}
-	}
+        try {
+            val result = api.getCommentList(movie.id, 2)
+            disposable.dispose()
+            commentDao.insert(result)
+            emitSource(commentDao.findByIdLimit2(movie.id).map {
+                Result.success(it)
+            })
+        } catch (e: java.lang.Exception) {
+            Timber.e(e)
+            emitSource(commentDao.findByIdLimit2(movie.id).map {
+                Result.error(e, it)
+            })
+        }
+    }
 
-	val enableLikeButton=MutableLiveData(true)
+    val movieAndCommentList = MediatorLiveData<List<ItemType>>().apply {
+        addSource(this@MovieDetailViewModel.movie) {
+            val list = mutableListOf<ItemType>()
+            list.add(it)
+            commentList.value?.data.isNotEmpty {
+                list.addAll(it)
+            }
+            list.add(MovieAndTail(it.movie))
+            value = list
+        }
 
-	fun onClickLike(){
-		enableLikeButton.value=false
-		viewModelScope.launch{
-			try {
-				val movie= movie.value?.let{ movie ->
-					when(movie.vote_like){
-						// 미표시 -> 좋아요~
-						Vote.NONE -> {
-							api.increaseLike(movie.id, "Y")
+        addSource(commentList) {
+            val list = mutableListOf<ItemType>()
+            it.data.isNotEmpty {
+                list.addAll(it)
+            }
+            this@MovieDetailViewModel.movie.value?.let {
+                list.add(0, it)
+                list.add(MovieAndTail(it.movie))
+            }
+            value = list
+        }
+    }
 
-							movie.apply {
-								like++
-								vote_like=Vote.LIKE
-							}
-						}
-						// 좋아요~ -> 취소
-						Vote.LIKE -> {
-							api.increaseLike(movie.id, "N")
+    val enableLikeButton = MutableLiveData(true)
 
-							movie.apply {
-								like--
-								vote_like=Vote.NONE
-							}
-						}
-						// 싫어요~ -> 취소, 좋아요~
-						Vote.DISLIKE -> {
-							api.increaseDislike(movie.id, "N")
-							api.increaseLike(movie.id, "Y")
+    fun onClickLike() {
+        enableLikeButton.value = false
+        viewModelScope.launch {
+            try {
+                movie.value?.movie?.let { movie ->
+                    when (movie.vote_like) {
+                        // 미표시 -> 좋아요~
+                        Vote.NONE -> {
+                            api.increaseLike(movie.id, "Y")
 
-							movie.apply {
-								like++
-								dislike--
-								vote_like=Vote.LIKE
-							}
-						}
-						else -> throw IllegalArgumentException("잘못된 접근입니다")
-					}
-				}?: throw NullPointerException()
-				movieDao.insert(movie)
-			} catch (e: Exception){
-				Toast.makeText(applicationContext,"네트워크 통신에 실패 하였습니다. 잠시후에 다시 시도해 주세요",Toast.LENGTH_LONG).show()
-			}
-			enableLikeButton.value=true
-		}
-	}
+                            movie.copy(like = movie.like + 1, vote_like = Vote.LIKE)
+                        }
+                        // 좋아요~ -> 취소
+                        Vote.LIKE -> {
+                            api.increaseLike(movie.id, "N")
 
-	fun onClickDislike(){
-		enableLikeButton.value=false
-		viewModelScope.launch{
-			try {
-				val movie=  movie.value?.let{ movie ->
-					when(movie.vote_like){
-						// 미표시 -> 싫어요~
-						Vote.NONE -> {
-							api.increaseDislike(movie.id, "Y")
+                            movie.copy(like = movie.like - 1, vote_like = Vote.NONE)
+                        }
+                        // 싫어요~ -> 취소, 좋아요~
+                        Vote.DISLIKE -> {
+                            api.increaseDislike(movie.id, "N")
+                            api.increaseLike(movie.id, "Y")
 
-							movie.apply {
-								dislike++
-								vote_like=Vote.DISLIKE
-							}
-						}
-						// 싫어요~ -> 취소
-						Vote.DISLIKE -> {
-							api.increaseDislike(movie.id, "N")
+                            movie.copy(
+                                like = movie.like + 1,
+                                dislike = movie.dislike - 1,
+                                vote_like = Vote.LIKE
+                            )
+                        }
+                        else -> throw IllegalArgumentException("잘못된 접근입니다")
+                    }
+                    movieDao.insert(movie)
+                }
+            } catch (e: Exception) {
+                Toast.makeText(
+                    applicationContext,
+                    "네트워크 통신에 실패 하였습니다. 잠시후에 다시 시도해 주세요",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            enableLikeButton.value = true
+        }
+    }
 
-							movie.apply {
-								dislike--
-								vote_like=Vote.NONE
-							}
-						}
-						// 좋아요~ -> 취소, 싫어요~
-						Vote.LIKE -> {
-							api.increaseLike(movie.id, "N")
-							api.increaseDislike(movie.id, "Y")
+    fun onClickDislike() {
+        enableLikeButton.value = false
+        viewModelScope.launch {
+            try {
+                movie.value?.movie?.let { movie ->
+                    when (movie.vote_like) {
+                        // 미표시 -> 싫어요~
+                        Vote.NONE -> {
+                            api.increaseDislike(movie.id, "Y")
 
-							movie.apply {
-								dislike++
-								like--
-								vote_like=Vote.DISLIKE
-							}
-						}
-						else -> throw IllegalArgumentException("잘못된 접근입니다")
-					}
-				}?: throw NullPointerException()
-				movieDao.insert(movie)
-			} catch (e: Exception){
-				Toast.makeText(applicationContext,"네트워크 통신에 실패 하였습니다. 잠시후에 다시 시도해 주세요",Toast.LENGTH_LONG).show()
-			}
-			enableLikeButton.value=true
-		}
-	}
+                            movie.copy(dislike = movie.dislike + 1, vote_like = Vote.DISLIKE)
+                        }
+                        // 싫어요~ -> 취소
+                        Vote.DISLIKE -> {
+                            api.increaseDislike(movie.id, "N")
 
-	val requestWriteActivity = MutableLiveData<Event<Movie>>()
-	fun onClickWrite() {
-		requestWriteActivity.value = Event(movie.value!!)
-	}
+                            movie.copy(dislike = movie.dislike - 1, vote_like = Vote.NONE)
+                        }
+                        // 좋아요~ -> 취소, 싫어요~
+                        Vote.LIKE -> {
+                            api.increaseLike(movie.id, "N")
+                            api.increaseDislike(movie.id, "Y")
 
-	val clickShowAll=MutableLiveData<Event<Movie>>()
-	fun onClickShowAll() {
-		clickShowAll.value=Event(movie.value!!)
-	}
+                            movie.copy(
+                                dislike = movie.dislike + 1,
+                                like = movie.like - 1,
+                                vote_like = Vote.DISLIKE
+                            )
+                        }
+                        else -> throw IllegalArgumentException("잘못된 접근입니다")
+                    }
+                    movieDao.insert(movie)
+                }
+            } catch (e: Exception) {
+                Toast.makeText(
+                    applicationContext,
+                    "네트워크 통신에 실패 하였습니다. 잠시후에 다시 시도해 주세요",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            enableLikeButton.value = true
+        }
+    }
 
-	val requestOpenGallery=MutableLiveData<Event<Photo>>()
-	fun onClickPhoto(photo: Photo){
-		requestOpenGallery.value=Event(photo)
-	}
+    val requestWriteActivity = MutableLiveData<Event<Movie>>()
+    fun onClickWrite() {
+        requestWriteActivity.value = Event(movie.value?.movie!!)
+    }
+
+    val clickShowAll = MutableLiveData<Event<Movie>>()
+    fun onClickShowAll() {
+        clickShowAll.value = Event(movie.value?.movie!!)
+    }
+
+    val requestOpenGallery = MutableLiveData<Event<Photo>>()
+    fun onClickPhoto(photo: Photo) {
+        requestOpenGallery.value = Event(photo)
+    }
+}
+
+fun <E, T: Collection<E>> T?.isEmpty(run: ()-> Unit): T? {
+    if(this == null || this.isEmpty()){
+        run()
+    }
+    return this
+}
+
+fun <E, T: Collection<E>> T?.isNotEmpty(run: (T) -> Unit): T? {
+    if (this != null && this.isNotEmpty()) {
+        run(this)
+    }
+    return this
+}
+
+infix fun <E, T: Collection<E>> T?.orElse(run: (T?) -> Unit) {
+    run(this)
 }

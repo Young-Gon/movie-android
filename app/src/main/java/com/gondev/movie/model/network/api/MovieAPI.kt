@@ -3,6 +3,7 @@ package com.gondev.movie.model.network.api
 import androidx.annotation.IntDef
 import com.gondev.movie.model.database.entity.Comment
 import com.gondev.movie.model.database.entity.Movie
+import com.gondev.movie.model.database.entity.MovieAndItemType
 import com.gondev.movie.model.network.api.OrderType.Companion.CURATION
 import com.gondev.movie.model.network.api.OrderType.Companion.RESERVATION
 import com.gondev.movie.model.network.api.OrderType.Companion.SCHEDULED

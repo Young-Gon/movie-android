@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="movie"
+            type="com.gondev.movie.model.database.entity.IMovie" />
+        <variable
+            name="vm"
+            type="com.gondev.movie.ui.detail.MovieDetailViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <FrameLayout
+            android:id="@+id/layoutShowAll"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_oneline_comment"
+            android:background="@android:color/white"/>
+
+        <Button
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="16dp"
+            android:background="@drawable/shape_rectangle_perple"
+            android:text="모두 보기"
+            android:textStyle="bold"
+            android:onClick="@{()->vm.onClickShowAll()}"
+            app:layout_constraintEnd_toEndOf="@+id/layoutShowAll"
+            app:layout_constraintStart_toStartOf="@+id/layoutShowAll"
+            app:layout_constraintTop_toTopOf="@+id/layoutShowAll"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutShowAll"/>
+
+        <ImageButton
+            android:id="@+id/btnFacebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/white"
+            android:padding="8dp"
+            android:paddingStart="16dp"
+            app:srcCompat="@drawable/ic_facebook"
+            app:layout_constraintTop_toBottomOf="@+id/layoutShowAll"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@android:color/white"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/btnFacebook"
+            app:layout_constraintStart_toEndOf="@+id/btnFacebook"
+            app:layout_constraintTop_toTopOf="@+id/btnFacebook"
+            app:srcCompat="@drawable/ic_kakao"/>
+        <FrameLayout
+            android:id="@+id/layoutPurchase"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/imageButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageButton"
+            app:layout_constraintTop_toTopOf="@+id/imageButton"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:background="#e44418"
+            android:text="예매하기"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/layoutPurchase"
+            app:layout_constraintStart_toStartOf="@+id/layoutPurchase"
+            app:layout_constraintTop_toTopOf="@+id/layoutPurchase"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutPurchase"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

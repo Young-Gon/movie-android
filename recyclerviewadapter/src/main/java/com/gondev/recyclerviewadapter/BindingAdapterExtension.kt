@@ -6,15 +6,21 @@ import android.view.View
 import androidx.annotation.DimenRes
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
+@BindingAdapter("adapter")
+fun <T> RecyclerView.setAdapterBinding(adapter: ListAdapter<T, *>) {
+    if(this.adapter!=null)
+        this.adapter = adapter
+}
 
 @BindingAdapter("items")
 fun <T> RecyclerView.setItems(items: List<T>?) {
     if(layoutManager==null)
         throw NullPointerException("layoutManager가 없습니다")
 
-    (this.adapter as? RecyclerViewListAdapter<T, *>)?.run {
+    (this.adapter as? ListAdapter<T,*>)?.run {
         submitList(items)
     }
 }

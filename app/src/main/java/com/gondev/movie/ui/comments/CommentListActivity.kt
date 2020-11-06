@@ -49,7 +49,7 @@ class CommentListActivity : AppCompatActivity(),
 		}
 		binding.lifecycleOwner=this
 
-		recyclerView.adapter=RecyclerViewListAdapter<Comment, OneLineCommentItemBinding>(
+		recyclerView.adapter=RecyclerViewListAdapter(
 			R.layout.item_oneline_comment,
 			BR.comment,
 			object : DiffUtil.ItemCallback<Comment>(){

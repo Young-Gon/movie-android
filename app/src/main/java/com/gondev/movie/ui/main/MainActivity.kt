@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(),
 		viewPager.setPageTransformer(marginTransformer)
 
 		// 아답터 생성 RecyclerViewListAdapter를 사용하면 아답터 구현 없이 간편하게 사용 가능하다
-		viewPager.adapter=object : RecyclerViewListAdapter<Movie, MovieViewpagerItemBinding>(
+		viewPager.adapter=object : RecyclerViewListAdapter<Movie>(
 			R.layout.item_movie_viewpager,
 			BR.movie,
 			object : DiffUtil.ItemCallback<Movie>() {
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(),
 			BR.vm to binding.vm!!
 		) {
 			override fun onBindViewHolder(
-				holder: RecyclerViewHolder<Movie, MovieViewpagerItemBinding>,
+				holder: RecyclerViewHolder<Movie>,
 				position: Int
 			) {
 				super.onBindViewHolder(holder, position)

@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data class="MovieDetailHeaderItemBinding">
+        <variable
+            name="movie"
+            type="com.gondev.movie.model.database.entity.IMovie" />
+
+        <variable
+            name="vm"
+            type="com.gondev.movie.ui.detail.MovieDetailViewModel" />
+
+        <variable
+            name="photoAdapter"
+            type="com.gondev.recyclerviewadapter.RecyclerViewListAdapter&lt;com.gondev.movie.model.network.dto.Photo>" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <FrameLayout
+            android:id="@+id/frameLayout1"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="1dp"
+            android:background="@android:color/white"
+            app:layout_constraintEnd_toStartOf="@+id/frameLayout2"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="예매율"
+            app:layout_constraintEnd_toEndOf="@+id/frameLayout1"
+            app:layout_constraintStart_toStartOf="@+id/frameLayout1"
+            app:layout_constraintTop_toTopOf="@+id/frameLayout1"
+            app:layout_constraintBottom_toTopOf="@+id/textView6"
+            app:layout_constraintVertical_chainStyle="packed"/>
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            tools:text="5위 1.8%"
+            android:text="@{@string/reservation_grade(movie.reservation_grade, movie.reservation_rate)}"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/frameLayout1"
+            app:layout_constraintEnd_toEndOf="@+id/frameLayout1"
+            app:layout_constraintStart_toStartOf="@+id/frameLayout1"
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+        <FrameLayout
+            android:id="@+id/frameLayout2"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginEnd="1dp"
+            android:background="@android:color/white"
+            app:layout_constraintEnd_toStartOf="@id/frameLayout3"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/frameLayout1"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="평점"
+            app:layout_constraintEnd_toEndOf="@+id/frameLayout2"
+            app:layout_constraintStart_toStartOf="@+id/frameLayout2"
+            app:layout_constraintTop_toTopOf="@+id/frameLayout2"
+            app:layout_constraintBottom_toTopOf="@+id/ratingBar"
+            app:layout_constraintVertical_chainStyle="packed"/>
+
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:max="5"
+            android:numStars="5"
+            android:rating="@{movie.audience_rating / 2f}"
+            tools:rating="4.1"
+            android:stepSize="0.5"
+            app:layout_constraintBottom_toBottomOf="@+id/frameLayout2"
+            app:layout_constraintEnd_toStartOf="@+id/textView8"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@+id/frameLayout2"
+            app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
+            app:layout_constraintEnd_toEndOf="@+id/frameLayout2"
+            app:layout_constraintStart_toEndOf="@+id/ratingBar"
+            app:layout_constraintTop_toTopOf="@+id/ratingBar"
+            android:text="@{@string/float_one(movie.audience_rating)}"
+            tools:text="8.2" />
+
+        <FrameLayout
+            android:id="@+id/frameLayout3"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="1dp"
+            android:background="@android:color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@+id/frameLayout2"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="누적관객수"
+            app:layout_constraintEnd_toEndOf="@+id/frameLayout3"
+            app:layout_constraintStart_toStartOf="@+id/frameLayout3"
+            app:layout_constraintTop_toTopOf="@+id/frameLayout3"
+            app:layout_constraintBottom_toTopOf="@+id/textView10"
+            app:layout_constraintVertical_chainStyle="packed"/>
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/comma(movie.audience)}"
+            tools:text="839,399명"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="@+id/frameLayout3"
+            app:layout_constraintStart_toStartOf="@+id/frameLayout3"
+            app:layout_constraintTop_toBottomOf="@+id/textView9"
+            app:layout_constraintBottom_toBottomOf="@+id/frameLayout3" />
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/white"
+            android:text="줄거리"
+            android:padding="12dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frameLayout1" />
+
+        <TextView
+            android:id="@+id/txtSynopsis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:lineSpacingExtra="4sp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:layout_marginBottom="8dp"
+            tools:text="군도, 백성을 구하라!\n
+양반과 탐관오리들의 착취가 극에 달했던 조선 철종 13년. "
+            android:text="@{movie.synopsis}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@+id/textViewTitle"/>
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/white"
+            android:padding="12dp"
+            android:paddingTop="8dp"
+            android:text="감독/출연"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/txtSynopsis" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:paddingStart="12dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="감독"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+        <TextView
+            android:id="@+id/txtDirector"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="#555555"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView12"
+            app:layout_constraintTop_toBottomOf="@+id/textView11"
+            android:text="@{movie.director}"
+            tools:text="윤종빈" />
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@android:color/white"
+            android:paddingStart="12dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="출연"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/txtStaring"
+            app:layout_constraintTop_toBottomOf="@+id/textView12"/>
+
+        <TextView
+            android:id="@+id/txtStaring"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:paddingTop="8dp"
+            android:paddingStart="8dp"
+            android:paddingBottom="8dp"
+            android:text="@{movie.actor}"
+            tools:text="하정우(도치), 강동원(조윤)"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="#555555"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/textView13"
+            app:layout_constraintTop_toBottomOf="@+id/txtDirector"/>
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/white"
+            android:text="갤러리"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:paddingStart="12dp"
+            android:paddingTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtStaring"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/horizontalRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="104dp"
+            android:background="@android:color/white"
+            android:paddingStart="12dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:clipToPadding="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="horizontal"
+            app:adapter="@{photoAdapter}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView13"
+            app:items="@{vm.photos}"
+            tools:listitem="@layout/item_horizontal_gallery"/>
+        <Button
+            android:id="@+id/btnWriteComment"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/white"
+            android:drawableStart="@drawable/ic_review_selected"
+            android:textColor="#ff561d"
+            android:text="작성하기"
+            android:onClick="@{()->vm.onClickWrite()}"
+            android:padding="16dp"
+            android:elevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontalRecyclerView"/>
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/white"
+            android:text="한줄평"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/btnWriteComment"
+            app:layout_constraintEnd_toStartOf="@+id/btnWriteComment"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontalRecyclerView"/>
+        <LinearLayout
+            android:id="@+id/layout_oneline_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/textView15"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -8,7 +8,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 
-class MultiRecyclerViewListAdapter<T, V : ViewDataBinding>(
+class MultiRecyclerViewListAdapter<T>(
     @LayoutRes layoutResId: Int,
     diffCallback: DiffUtil.ItemCallback<T>,
     bindingVariableId: Int? = null,
@@ -16,7 +16,7 @@ class MultiRecyclerViewListAdapter<T, V : ViewDataBinding>(
     @LayoutRes private val  footerLayoutResId: Int=0,
     lifecycleOwner: LifecycleOwner?=null,
     vararg param: Pair<Int, Any>
-): RecyclerViewListAdapter<T, V>(layoutResId, bindingVariableId,diffCallback,lifecycleOwner,*param) {
+): RecyclerViewListAdapter<T>(layoutResId, bindingVariableId,diffCallback,lifecycleOwner,*param) {
     private val VALUE_TYPE=0
     private val HEADER_TYPE=-1
     private val FOOTER_TYPE=-2
@@ -31,7 +31,7 @@ class MultiRecyclerViewListAdapter<T, V : ViewDataBinding>(
         return VALUE_TYPE
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<T, V> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHolder<T> {
         if(viewType==VALUE_TYPE)
             return super.onCreateViewHolder(parent, viewType)
 
@@ -41,13 +41,13 @@ class MultiRecyclerViewListAdapter<T, V : ViewDataBinding>(
             else -> throw IllegalAccessException("알 수 없는 뷰 타입 입니다 viteType=$viewType")
         }
 
-        return RecyclerViewHolder<T, V>(
+        return RecyclerViewHolder<T>(
             (DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
                 layoutResId,
                 parent,
                 false
-            ) as V).apply {
+            ) as ViewDataBinding).apply {
                 param.forEach {
                     setVariable(it.first, it.second)
                 }

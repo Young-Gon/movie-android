@@ -34,6 +34,8 @@ import com.gondev.movie.ui.util.IBindingActivityDelegate
 import com.gondev.movie.ui.write.startWriteCommentActivity
 import com.gondev.movie.util.EventObserver
 import com.gondev.movie.util.dpToPx
+import com.gondev.recyclerviewadapter.BINDING_VARIABLE_ID
+import com.gondev.recyclerviewadapter.MultiViewDataBindingAdapter
 import com.gondev.recyclerviewadapter.RecyclerViewListAdapter
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 import org.koin.androidx.viewmodel.ext.android.getViewModel
@@ -87,7 +89,7 @@ class MovieDetailActivity : AppCompatActivity(),
 		binding.lifecycleOwner=this
 
 		// photo recyclerview 아답타 등록
-		horizontalRecyclerView.adapter=RecyclerViewListAdapter<Photo, HorizontalGalleryItemBinding>(
+		/*horizontalRecyclerView.adapter=RecyclerViewListAdapter<Photo, HorizontalGalleryItemBinding>(
 			R.layout.item_horizontal_gallery,
 			BR.photo,
 			object: DiffUtil.ItemCallback<Photo>(){
@@ -140,7 +142,35 @@ class MovieDetailActivity : AppCompatActivity(),
 					comment = it
 				}
 			}
-		})
+		})*/
+
+		binding.recyclerView.adapter = MultiViewDataBindingAdapter(this,
+			R.layout.item_movie_detail_header to listOf(
+				BR.movie to BINDING_VARIABLE_ID,
+				BR.vm to binding.vm!!,
+				BR.photoAdapter to RecyclerViewListAdapter<Photo>(
+					R.layout.item_horizontal_gallery,
+					BR.photo,
+					object: DiffUtil.ItemCallback<Photo>(){
+						override fun areItemsTheSame(oldItem: Photo, newItem: Photo) =
+							oldItem == newItem
+
+						override fun areContentsTheSame(oldItem: Photo, newItem: Photo) =
+							oldItem == newItem
+					},
+					this,
+					BR.vm to binding.vm!!
+				)
+			),
+			R.layout.item_oneline_comment to listOf(
+				BR.comment to BINDING_VARIABLE_ID,
+				BR.vm to binding.vm!!
+			),
+			R.layout.item_movie_detail_tail to listOf(
+				BR.movie to BINDING_VARIABLE_ID,
+				BR.vm to binding.vm!!
+			)
+		)
 
 		// 한줄평 쓰기
 		binding.vm?.requestWriteActivity?.observe(this, EventObserver{
