@@ -7,6 +7,8 @@ import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.*
 import java.lang.IllegalArgumentException
+import kotlin.math.min
+import kotlin.math.max
 
 
 const val BINDING_VARIABLE_ID = -1
@@ -76,7 +78,7 @@ class GridDataBindingAdapter(
             override fun getSpanSize(position: Int): Int {
                 val item = getItem(position)
                 if (item is GridItemType)
-                    return item.spanSize
+                    return min(layoutManager.spanCount, max(1, item.spanSize))
 
                 return 1
             }
