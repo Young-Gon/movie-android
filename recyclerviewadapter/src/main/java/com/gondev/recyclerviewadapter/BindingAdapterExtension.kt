@@ -8,6 +8,7 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SnapHelper
 
 @BindingAdapter("adapter")
 fun <T> RecyclerView.setAdapterBinding(adapter: ListAdapter<T, *>) {
@@ -23,6 +24,11 @@ fun <T> RecyclerView.setItems(items: List<T>?) {
     (this.adapter as? ListAdapter<T,*>)?.run {
         submitList(items)
     }
+}
+
+@BindingAdapter("snapHelper")
+fun RecyclerView.setSnapHelper(snapHelper: SnapHelper) {
+    snapHelper.attachToRecyclerView(this)
 }
 
 @BindingAdapter("itemMargin")

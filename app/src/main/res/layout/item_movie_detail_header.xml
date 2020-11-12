@@ -3,6 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data class="MovieDetailHeaderItemBinding">
+        <import type="com.gondev.recyclerviewadapter.RecyclerViewListAdapter"/>
+        <import type="com.gondev.movie.model.network.dto.Photo"/>
+
         <variable
             name="movie"
             type="com.gondev.movie.model.database.entity.IMovie" />
@@ -13,7 +16,12 @@
 
         <variable
             name="photoAdapter"
-            type="com.gondev.recyclerviewadapter.RecyclerViewListAdapter&lt;com.gondev.movie.model.network.dto.Photo>" />
+            type="RecyclerViewListAdapter&lt;Photo>" />
+
+        <variable
+            name="snapHalper"
+            type="com.github.rubensousa.gravitysnaphelper.GravitySnapHelper" />
+
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -277,13 +285,15 @@
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
             android:clipToPadding="false"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:adapter="@{photoAdapter}"
+            app:snapHelper="@{snapHalper}"
+            app:items="@{vm.photos}"
+            hasFixedSize="@{true}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView13"
-            app:items="@{vm.photos}"
             tools:listitem="@layout/item_horizontal_gallery"/>
         <Button
             android:id="@+id/btnWriteComment"

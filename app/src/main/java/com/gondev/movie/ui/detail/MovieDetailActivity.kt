@@ -8,32 +8,24 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.app.NavUtils
 import androidx.core.view.ViewCompat
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DiffUtil
 import coil.api.load
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper
 import com.gondev.movie.BR
 import com.gondev.movie.R
-import com.gondev.movie.databinding.HorizontalGalleryItemBinding
 import com.gondev.movie.databinding.MovieDetailActivityBinding
-import com.gondev.movie.databinding.OneLineCommentItemBinding
 import com.gondev.movie.model.database.entity.Movie
 import com.gondev.movie.model.network.dto.Photo
-import com.gondev.movie.model.util.Result
 import com.gondev.movie.ui.comments.startCommentListActivity
 import com.gondev.movie.ui.main.MainActivity
 import com.gondev.movie.ui.util.BindingActivityDelegate
 import com.gondev.movie.ui.util.IBindingActivityDelegate
 import com.gondev.movie.ui.write.startWriteCommentActivity
 import com.gondev.movie.util.EventObserver
-import com.gondev.movie.util.dpToPx
 import com.gondev.recyclerviewadapter.BINDING_VARIABLE_ID
 import com.gondev.recyclerviewadapter.MultiViewDataBindingAdapter
 import com.gondev.recyclerviewadapter.RecyclerViewListAdapter
@@ -88,62 +80,6 @@ class MovieDetailActivity : AppCompatActivity(),
 
 		binding.lifecycleOwner=this
 
-		// photo recyclerview 아답타 등록
-		/*horizontalRecyclerView.adapter=RecyclerViewListAdapter<Photo, HorizontalGalleryItemBinding>(
-			R.layout.item_horizontal_gallery,
-			BR.photo,
-			object: DiffUtil.ItemCallback<Photo>(){
-				override fun areItemsTheSame(oldItem: Photo, newItem: Photo) =
-					oldItem == newItem
-
-				override fun areContentsTheSame(oldItem: Photo, newItem: Photo) =
-					oldItem == newItem
-			},
-			this,
-			BR.vm to binding.vm!!
-		)
-
-		// photoRecyclerView에 아이템이 이쁘게 정렬 되도록 snapHelper 등록
-		GravitySnapHelper(Gravity.START).attachToRecyclerView(horizontalRecyclerView)
-
-		// 한줄평 불러오기 완료시 동적으로 한줄평 addView
-		binding.vm?.commentList?.observe(this, Observer { result ->
-			layout_oneline_comment.removeAllViews()
-
-			// 한줄평 예외 처리
-			if(result?.data == null || result.data.isEmpty()) {
-				layout_oneline_comment.addView(TextView(this@MovieDetailActivity).apply {
-					text = when (result) {
-						null, is Result.Loading -> "한줄평을 가저 오는 중입니다..."
-						is Result.Success -> "한줄평이 없습니다."
-						is Result.Error -> "네트워크 오류 입니다"
-					}
-					layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-						setMargins(
-							16.dpToPx(resources.displayMetrics),
-							8.dpToPx(resources.displayMetrics),
-							16.dpToPx(resources.displayMetrics),
-							8.dpToPx(resources.displayMetrics)
-						)
-					}
-				})
-				return@Observer
-			}
-
-			// 한줄평 동적 등록
-			result.data.forEach{
-				DataBindingUtil.inflate<OneLineCommentItemBinding>(
-					layoutInflater,
-					R.layout.item_oneline_comment,
-					layout_oneline_comment,
-					true
-				).apply {
-					vm = binding.vm
-					comment = it
-				}
-			}
-		})*/
-
 		binding.recyclerView.adapter = MultiViewDataBindingAdapter(this,
 			R.layout.item_movie_detail_header to listOf(
 				BR.movie to BINDING_VARIABLE_ID,
@@ -160,7 +96,9 @@ class MovieDetailActivity : AppCompatActivity(),
 					},
 					this,
 					BR.vm to binding.vm!!
-				)
+				),
+				// photoRecyclerView에 아이템이 이쁘게 정렬 되도록 snapHelper 등록
+				BR.snapHalper to GravitySnapHelper(Gravity.START)
 			),
 			R.layout.item_oneline_comment to listOf(
 				BR.comment to BINDING_VARIABLE_ID,
