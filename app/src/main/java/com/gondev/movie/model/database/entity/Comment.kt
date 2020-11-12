@@ -50,6 +50,12 @@ data class CommentAndItemType(
 	override val layoutResId: Int = R.layout.item_oneline_comment
 }
 
+data class EmptyCommentItemType(
+	override val layoutResId: Int = R.layout.item_movie_detail_empty_comment,
+	override val id: Long = 1
+
+):ItemType
+
 fun getDuration(from: LocalDateTime?) = from?.let {
 	Duration.between(it, LocalDateTime.now()).let { duration ->
 		when {

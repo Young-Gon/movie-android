@@ -1,12 +1,8 @@
 package com.gondev.movie.ui.detail
 
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.lifecycle.*
-import com.gondev.movie.BuildConfig
 import com.gondev.movie.R
 import com.gondev.movie.model.database.AppDatabase
 import com.gondev.movie.model.database.dao.CommentDao
@@ -15,10 +11,13 @@ import com.gondev.movie.model.network.api.MovieAPI
 import com.gondev.movie.model.network.dto.Photo
 import com.gondev.movie.model.util.Result
 import com.gondev.movie.util.Event
+import com.gondev.movie.util.isNotEmpty
+import com.gondev.movie.util.orElse
 import com.gondev.recyclerviewadapter.ItemType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.*
 
@@ -152,6 +151,8 @@ class MovieDetailViewModel(
             list.add(it)
             commentList.value?.data.isNotEmpty {
                 list.addAll(it)
+            } orElse {
+                list.add(EmptyCommentItemType())
             }
             list.add(MovieAndTail(it.movie))
             value = list
@@ -161,6 +162,8 @@ class MovieDetailViewModel(
             val list = mutableListOf<ItemType>()
             it.data.isNotEmpty {
                 list.addAll(it)
+            } orElse {
+                list.add(EmptyCommentItemType())
             }
             this@MovieDetailViewModel.movie.value?.let {
                 list.add(0, it)
@@ -192,8 +195,8 @@ class MovieDetailViewModel(
                         }
                         // 싫어요~ -> 취소, 좋아요~
                         Vote.DISLIKE -> {
-                            api.increaseDislike(movie.id, "N")
-                            api.increaseLike(movie.id, "Y")
+                            withContext(Dispatchers.Default) { api.increaseDislike(movie.id, "N") }
+                            withContext(Dispatchers.Default) { api.increaseLike(movie.id, "Y") }
 
                             movie.copy(
                                 like = movie.like + 1,
@@ -236,8 +239,8 @@ class MovieDetailViewModel(
                         }
                         // 좋아요~ -> 취소, 싫어요~
                         Vote.LIKE -> {
-                            api.increaseLike(movie.id, "N")
-                            api.increaseDislike(movie.id, "Y")
+                            withContext(Dispatchers.Default) { api.increaseLike(movie.id, "N") }
+                            withContext(Dispatchers.Default) { api.increaseDislike(movie.id, "Y") }
 
                             movie.copy(
                                 dislike = movie.dislike + 1,
@@ -274,22 +277,4 @@ class MovieDetailViewModel(
     fun onClickPhoto(photo: Photo) {
         requestOpenGallery.value = Event(photo)
     }
-}
-
-fun <E, T: Collection<E>> T?.isEmpty(run: ()-> Unit): T? {
-    if(this == null || this.isEmpty()){
-        run()
-    }
-    return this
-}
-
-fun <E, T: Collection<E>> T?.isNotEmpty(run: (T) -> Unit): T? {
-    if (this != null && this.isNotEmpty()) {
-        run(this)
-    }
-    return this
-}
-
-infix fun <E, T: Collection<E>> T?.orElse(run: (T?) -> Unit) {
-    run(this)
 }

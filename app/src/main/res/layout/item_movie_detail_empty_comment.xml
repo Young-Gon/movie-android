@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <import type="com.gondev.movie.model.util.Result"/>
+        <variable
+            name="vm"
+            type="com.gondev.movie.ui.detail.MovieDetailViewModel" />
+    </data>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="62dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@{ vm.commentList instanceof Result.Loading ? `한줄평을 가저 오는 중입니다...` : vm.commentList instanceof Result.Error ? `네트워크 오류 입니다` : `한줄평이 없습니다.`}"
+        android:gravity="center_vertical"/>
+</layout>

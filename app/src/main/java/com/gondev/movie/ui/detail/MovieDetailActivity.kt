@@ -148,7 +148,7 @@ class MovieDetailActivity : AppCompatActivity(),
 			R.layout.item_movie_detail_header to listOf(
 				BR.movie to BINDING_VARIABLE_ID,
 				BR.vm to binding.vm!!,
-				BR.photoAdapter to RecyclerViewListAdapter<Photo>(
+				BR.photoAdapter to RecyclerViewListAdapter(
 					R.layout.item_horizontal_gallery,
 					BR.photo,
 					object: DiffUtil.ItemCallback<Photo>(){
@@ -168,6 +168,9 @@ class MovieDetailActivity : AppCompatActivity(),
 			),
 			R.layout.item_movie_detail_tail to listOf(
 				BR.movie to BINDING_VARIABLE_ID,
+				BR.vm to binding.vm!!
+			),
+			R.layout.item_movie_detail_empty_comment to listOf(
 				BR.vm to binding.vm!!
 			)
 		)

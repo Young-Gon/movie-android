@@ -36,7 +36,7 @@ class MarginItemDecoration(
 }
 
 class ItemDividerDecoration private constructor(
-	val dividerThicknessInDP: Float
+	private val dividerThicknessInDP: Float
 ) : RecyclerView.ItemDecoration() {
 
 	constructor(dividerThicknessInDP: Float, dividerColor: String) : this(dividerThicknessInDP) {

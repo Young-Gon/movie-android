@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 @BindingAdapter("adapter")
 fun <T> RecyclerView.setAdapterBinding(adapter: ListAdapter<T, *>) {
-    if(this.adapter!=null)
+    if(this.adapter==null)
         this.adapter = adapter
 }
 
