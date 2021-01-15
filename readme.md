@@ -181,22 +181,7 @@ class MainViewModel {
 코드는 더 간단해 지고 클레스의 기능이 더욱 명확해 지게 됩니다  
 이 구조에서 엑티비티의 역할은 context와 관련된 다른 activity, fragment
 띄우기, systemService 호출, 라이프 사이클 제어등과 같은 엑티비티 본연의
-기능으로 축소 됩니다
-
-이 MVVM 페턴을 지원 하기 위해서 구글에서는
-[AAC(Android Architecture Components)](https://developer.android.com/topic/libraries/architecture)
-만들었습니다  
-이 라이브러리 페키지는 데이터 바인딩을 위한
-[Android DataBinding](https://developer.android.com/topic/libraries/data-binding?hl=ko),  
-데이터를 옵저빙 하기 위한
-[LiveData](https://developer.android.com/topic/libraries/architecture/livedata),  
-ViewModel을 지원하기위한
-[ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel?gclid=CjwKCAjwscDpBRBnEiwAnQ0HQPqEwqcwqWIIiS4vvyyb8yOwD-TnU_JdB40PasppO49PaAWgGpBVkhoC6cMQAvD_BwE)
-및  
-[AndroidViewModel](https://developer.android.com/reference/android/arch/lifecycle/AndroidViewModel)
-을 지원하고 안드로이드 라이프 사이클을 추적하기 위한
-[LifeCycleObserver](https://developer.android.com/reference/android/arch/lifecycle/LifecycleObserver)
-를 제공 하고 있습니다
+기능으로 축소 됩니다ㅊ
 
 ### Kotlin coroutines with Architecture component의 이해
 [Kotlin coroutines with Architecture component](https://developer.android.com/topic/libraries/architecture/coroutines)는
@@ -382,7 +367,7 @@ CoroutineScope(Dispatchers.IO).launch {
 
 이 async/await 방식이 Promise 방식보다 좋은점은 코드 블럭이 줄어 들고
 코드의 가독성이 좋아 진다는 점입니다 코드의 가독성이 좋아지면 이해하기 쉽고
-오용할 여지가 줄어 듭니다 쉽게 말해 유지보수가 좋고 버그가 적게 생깁니다
+오용할 여지가 줄어 듭니다 쉽게 말해 유지보수가 좋아지고 버그가 적어집니다
 
 #### Android VM내에서 디비 쿼리와 네트워크 API호출을 다루기
 이제 DB애서 쿼리 해혼 값과 네트워크에서 API로 호출한 값을 동시에 다룰려면

@@ -16,7 +16,7 @@ import java.time.LocalDateTime
 	indices = [Index("movieId")]
 )
 data class Comment (
-	@PrimaryKey
+	@PrimaryKey(autoGenerate = true)
 	val id: Long,
 	val movieId: Long,
 	val writer: String,
