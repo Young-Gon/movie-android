@@ -10,6 +10,7 @@ import com.gondev.movie.model.database.entity.Vote.Companion.DISLIKE
 import com.gondev.movie.model.database.entity.Vote.Companion.LIKE
 import com.gondev.movie.model.database.entity.Vote.Companion.NONE
 import kotlinx.android.parcel.Parcelize
+import kotlinx.serialization.Serializable
 
 
 @IntDef(LIKE, NONE, DISLIKE)
@@ -116,6 +117,7 @@ interface IMovie{
 	val vote_like: Int
 }
 
+@Serializable
 @Parcelize
 @Entity
 data class Movie (
@@ -132,18 +134,18 @@ data class Movie (
 	override val grade: Int,
 	override val thumb: String?,
 	override val image: String?,
-	override val photos: String?,
-	override val videos: String?,
-	override val genre: String?,
-	override val duration: Int,
-	override val audience: Long,
-	override val synopsis: String?,
-	override val director: String?,
-	override val actor: String?,
-	override var like: Long,
-	override var dislike: Long,
+	override val photos: String?=null,
+	override val videos: String?=null,
+	override val genre: String?=null,
+	override val duration: Int=0,
+	override val audience: Long=0,
+	override val synopsis: String?=null,
+	override val director: String?=null,
+	override val actor: String?=null,
+	override var like: Long=0,
+	override var dislike: Long=0,
 	@Vote
-	override var vote_like: Int
+	override var vote_like: Int=0
 ):IMovie, Parcelable
 
 class MovieAndComment(
